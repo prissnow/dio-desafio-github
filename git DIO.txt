@@ -1,0 +1,204 @@
+CLI (Command Line Interface)
+
+TAB tem a função de autocompletar
+
+No Windows:
+
+- dir
+- cd (command direction)  Ex: cd Windows (vai para pasta)   cd .. (volta para a pasta anterior)
+- cls (clear screen)
+- mkdir (make directory - cria um diretório)
+ - del / rmdir
+ - echo -texto- > texto.txt (coloca o texto no arquivo que ele cria redirecionado com o símbolo >)
+ - del -nome-do-arquivo- (deleta apenas arquivos, não pastas)
+ - rmdir -nome-da-pasta- (deleta a pasta e tudo que há nela)
+ 
+ No Linux:
+ 
+ - ls
+ - cd 
+ - clear (tbm pode usar ctrl + l)
+ - mkdir
+ - echo -texto- > texto.txt 
+ - rm -rf (vai deletar a pasta e todas as outras pastas e arquivos lá dentro, o 'f' força o delete sem nem perguntar)
+ 
+ 
+ 
+ SHA1 - Secure Hash Algoritm - encriptação gera conjunto de characteres identificador de 40 dígitos
+ 
+ *Objetos fundamentais* - armazenam metadados
+ blob - é o bloco básico de composição, armazena o sha1 (que é o tipo do objeto, tamanho do string, tamanho do arquivo, etc - metadados do git)
+ 
+ tree - armazena os blobs e o nome do arquivo
+ 
+ commit - junta tudo, aponta para uma tree, para um 'parente' (o último commit), autor e mensagem, timestamp - também possuem SHA1, ou seja, se um blob for alterado, vai gerar um SHA1, pois foi alterado os metadados do blob, da tree, etc
+ 
+ Sistema distribuído seguro
+ 
+ 
+ SSH e Token
+ 
+para criar chaves:
+
+ssh-keygen -t ed25519 -c <e-mail>
+(vai aparecer "Enter file in which to save the key (/c/Users-caminho-da-pasta):"
+(depois "Enter passphrase (empty for no passphrase):" -coloca-a-senha-
+(depois "Enter same passphrase again:")
+
+para visualizar as chaves:
+
+cd /c/-caminho-da-pasta
+
+ls (lista as chaves)
+
+cat id_ed25519.pub (vai mostrar a chave pública)
+
+Essa chave você pode colocar no github em SSH Keys / Add new
+
+
+no cmd:
+
+pwd (mostra onde você está)
+
+ eval $(ssh-agent -s)  --- ele vai gerar um Agent pid
+ 
+ ssh-add (colocar o caminho da pasta ou, se estiver dentro da pasta, é só colocar o id_ed25519(por ex)	)
+Vai pedir  a senha, vc coloca - isso vai gerar sua chave particular
+
+Quando vc tem chave SSH configurada, não dá para apenas clonar um projeto no github, vc precisa pegar o caminho do SSH e colocar no git bash:
+
+Ex:
+git clone git@github.com:caminho-da-pasta
+
+A primeira vez vai aparecer uma msg do tipo:
+
+"Cloning into 'caminho...' ...
+The authenticity of host 'github.com (...)' can't be established.
+RSA key fingerprint is SHAxxxxxxxxx
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+
+Colocar yes e ele clona o projeto
+
+
+TOKEN DE ACESSO PESSOAL
+
+developer settings > personal accesso tokens
+
+colocar nome no "note", colocar o tempo de expirar e selecionar 'repo'
+Vai gerar um token de acesso, vc copia e cola em algum lugar pq essa informação some quando vc sai da página
+
+Para copiar repositório privado, vc escolhe HTTPS, copia o link e vai para o git bash
+
+git clone -colar a url que vc quer clonar-
+vai aparecer a janela 'connect to github' e vc cola o token para dar sign in 
+
+
+PRIMEIROS COMANDOS COM GIT
+
+- Iniciar o GIT
+Dentro da pasta selecionada usar: git init
+Ele cria uma pasta oculta gerencial onde vai ficar registrado as versões
+ls -a (mostra os arquivos ocultos)
+
+git config --global user.email "colocar-email"
+git config --global user.name "colocar-nome"
+
+Salvar um arquivo na pasta e dar commmit
+
+git add *
+git commit -m "commit inicial" (para indicar qual foi o primeiro commit, por ex)
+
+untracked - o git não tem ciência do arquivo
+
+tracked - o git tem ciência do arquivo e tem:
+unmodified: não foi modificado
+modified: foi modificado
+staged: onde ficam os arquivos que estão se preparando para fazer outro tipo de agrupamento (por ex, qd o arquivo está untracked, vc dá git add e ele vai pra staged, aguardando maiores instruções)
+
+
+
+git status (mostra informações sobre o repositório)
+
+mv -nome-do-arquivo- ./nome-da-pasta/  (move o arquivo para outra pasta)
+
+Para commitar uma nova pasta, por exemplo:
+
+git add nome-do-arquivo (que foi movido de pasta) nome-da-pasta/
+
+Isso muda os arquivos de untracked para staged  
+
+git commit - m "msg para o commit (por ex: cria pasta x, move arquivo para pasta x)"
+
+echo > README.md (cria um novo arquivo markdown)
+
+Vai mostrar que tem arquivos novos não rastreados, será necessário dar add e commit nesse novo arquivo
+
+git add * (adiciona tudo o que foi modificado)
+
+#nome (uma # é igual a <h1> do html, duas ## é <h2> e assim por diante - no markdown)
+
+
+
+
+
+
+GITHUB
+
+git config --list 
+
+git config --global --unset user.email 
+(tira o email cadastrado no github)
+git config --global --unset user.name 
+(tira o user name)
+
+git config --global user.email "colocar-email"
+git config --globla user.name "colocar nome"
+(para setar o email e user)
+
+
+no github:
+
+create a new repository:
+
+owner/nome-do-repositorio 
+
+copiar a url dada pelo github e ir para o git bash
+
+git remote add origin colar-a-url-do-github 
+(origin é o nome/apelido dado, para não precisar ficar colando a url toda vez)
+
+git remote -v 
+(lista os repositórios remotos)
+
+git push origin master
+(master é a branch para onde o código será enviado)
+
+vai pedir o SSH para continuar  e vai enviar o código 
+
+no github já aparece o código e o arquivo readme.md aparece como 'capa'
+
+Para colocar uma alteração em um arquivo que já está no github, é necessário puxar o arquivo que está lá primeiro 
+Se vc tentou dar push antes, vai dar erro de conflito. Será necessário abrir o arquivo, o readme.md, por ex, e verificar/arrumar e salvar
+De volta no git:
+
+git status
+(vai mostrar as modificações)
+
+git add *
+git commit - m "resolve conflitos (nome exemplo)"
+git push origin master 
+
+
+Para baixar um repositório:
+
+Clicar em code - copiar o link url e ir para o git bash
+
+git clone colar-url
+cd nome-da-pasta/
+ls
+(mostra todas as pastas)
+ls -a 
+(mostra repositórios ocultos)
+git remote -v
+(mostra para onde o repositório está apontado)
